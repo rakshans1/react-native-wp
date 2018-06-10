@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import Login from './src/layouts/Login';
+import Screen from './src/Screen';
 
 export default class App extends Component {
   render() {
     return (
-      <Login/>
+      <Screen/>
     )
   }
 }

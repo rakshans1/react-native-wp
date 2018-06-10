@@ -2,8 +2,18 @@ import React, { Component } from 'react';
 import { View, Text, TextInput, Button, Image, StyleSheet, Linking } from 'react-native';
 
 import Images from '@assets/images';
+import {auth} from '../services';
 
 class Login extends Component {
+  state = {
+    username: '',
+    password: '',
+  }
+
+  async _handleLogin() {
+    const { username, password } = this.state;
+    auth.login(username, password);
+  }
   render() {
     return (
       <View style={styles.loginWrap}>
@@ -15,14 +25,16 @@ class Login extends Component {
         </View>
         <View style={styles.loginMiddle}>
           <TextInput
-          onChange={(text) => this.setState({username: text})}
+          value={this.state.username}
+          onChangeText={username => this.setState({username})}
           placeholder="Username"
           placeholderTextColor="#494754"
           underlineColorAndroid="#f1ebfe"
           style={styles.textInput}
           />
           <TextInput
-          onChange={(text) => this.setState({username: text})}
+          value={this.state.password}
+          onChangeText={password => this.setState({password})}
           placeholder="Password"
           secureTextEntry={true}
           placeholderTextColor="#494754"
@@ -30,12 +42,13 @@ class Login extends Component {
           style={styles.textInput}
           />
           <Button
-          onPress={(e) => this.handleLogin(e)}
-          title="Login"
-          color="#4459e4"
-          style={styles.loginButton} />
+            onPress={() => this._handleLogin()}
+            title="Login"
+            color="#4459e4"
+            style={styles.loginButton}
+          />
           <Text style={styles.forgotText}
-          onPress={() => Linking.openURL('http://google.com')}
+            onPress={() => Linking.openURL('http://google.com')}
           >Forgot password?</Text>
         </View>
         <View style={styles.loginBottom}>
@@ -53,6 +66,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-around',
     padding: 20,
+    backgroundColor: '#fff'
   },
   logo: {
     width: 150,
