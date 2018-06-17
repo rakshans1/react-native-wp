@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, Image, StyleSheet, Linking } from 'react
 
 import Images from '@assets/images';
 import {auth} from '../services';
+import {ENV} from '../config/environment'
 
 class Login extends Component {
   state = {
@@ -12,7 +13,9 @@ class Login extends Component {
 
   async _handleLogin() {
     const { username, password } = this.state;
-    auth.login(username, password);
+    auth.login(username, password)
+      .then(() => this.props.navigation.navigate('App'))
+      .catch(e => console.log(e));
   }
   render() {
     return (
@@ -48,7 +51,7 @@ class Login extends Component {
             style={styles.loginButton}
           />
           <Text style={styles.forgotText}
-            onPress={() => Linking.openURL('http://google.com')}
+            onPress={() => Linking.openURL(`${ENV.API_URL}wp-login.php?action=lostpassword`)}
           >Forgot password?</Text>
         </View>
         <View style={styles.loginBottom}>
@@ -65,7 +68,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flex: 1,
     justifyContent: 'space-around',
-    padding: 20,
+    padding: 16,
     backgroundColor: '#fff'
   },
   logo: {
@@ -77,7 +80,7 @@ const styles = StyleSheet.create({
     color: '#818095',
     fontSize: 12,
     fontWeight: '100',
-    marginTop: 8
+    marginTop: 16
   },
   loginTop: {
     alignSelf: 'center'
@@ -102,7 +105,6 @@ const styles = StyleSheet.create({
     color: '#838297',
     fontSize: 12,
     fontWeight: '100',
-    marginRight: 8
   }
 });
 

@@ -1,12 +1,17 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View } from 'react-native';
+import { Text, StyleSheet, View, Button } from 'react-native';
 import { auth } from '../services';
 
 class Home extends Component {
+  logout = () => {
+    auth.logout();
+    this.props.navigation.navigate('Auth');
+  }
   render() {
     return (
       <View>
-        <Text onPress={() => auth.logout()}> {auth.getToken()} </Text>
+        <Text> {auth.getToken()} </Text>
+        <Button onPress={this.logout} title='logout'/>
       </View>
     )
   }

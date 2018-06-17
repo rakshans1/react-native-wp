@@ -1,5 +1,6 @@
-import { ENV } from '../../config/environment';
+import axios from 'axios';
 
+import { ENV } from '../../config/environment';
 
 /**
  * Api class in which uses fetch as http handler
@@ -9,6 +10,8 @@ import { ENV } from '../../config/environment';
 class Api {
   constructor() {
     this.apiUrl = ENV.API_URL + 'wp-json/';
+    axios.defaults.baseURL = this.apiUrl;
+    axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
   }
   /**
    *
@@ -17,30 +20,13 @@ class Api {
    * @returns promise
    * @memberof Api
    */
-  get({ iswp, url, params, options }) {
+  get(url, options = {}) {
     const defaultOptions = {
-      method: 'GET',
     };
-    const init = { ...defaultOptions, ...options };
-    let Url = url;
+    const config = { ...defaultOptions, ...options };
     return new Promise((resolve, reject) => {
-      if (iswp) {
-        Url = this.apiUrl  + url;
-      }
-      Url = new URL(url);
-      if (params) {
-        Object.keys(params).forEach(key =>
-          Url.searchParams.append(key, params[key]),
-        );
-      }
-      fetch(Url, init)
-        .then(res => {
-          if (res.ok) {
-            return res.json();
-          }
-          reject(res);
-        })
-        .then(response => resolve(response))
+      axios.get(url, config)
+        .then(response => resolve(response.data))
         .catch(error => reject(error));
     });
   }
@@ -51,25 +37,13 @@ class Api {
    * @returns promise
    * @memberof Api
    */
-  post({ iswp, url, options, data }) {
+  post(url, data, options = {}) {
     const defaultOptions = {
-      method: 'POST',
-      body: data,
     };
-    const init = { ...defaultOptions, ...options };
-    let Url = url;
+    const config = { ...defaultOptions, ...options };
     return new Promise((resolve, reject) => {
-      if (iswp) {
-        Url = this.apiUrl + url;
-      }
-      fetch(Url, init)
-        .then(async res => {
-          if (res.ok) {
-            return res.json();
-          }
-          reject(await res.json());
-        })
-        .then(response => resolve(response))
+      axios.post(url, data, config)
+        .then(response => resolve(response.data))
         .catch(error => reject(error));
     });
   }

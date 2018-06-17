@@ -4,17 +4,22 @@ import { api } from '../index'
 class Auth {
   _token = null;
 
-  async login(username, password) {
-    const loginData = new FormData();
-    loginData.append('username', username);
-    loginData.append('password', password);
-    try {
-      const res = await api.post({iswp: true, url: '/token', data: loginData});
-      this._token = res.token;
-      await AsyncStorage.setItem("auth", JSON.stringify(res));
-    } catch (e) {
-      console.log(e);
-    }
+  login(username, password) {
+    return new Promise(async (resolve, reject) => {
+
+      const loginData = {
+        username,
+        password
+      }
+      try {
+        const res = await api.post('/token', loginData);
+        this._token = res.token;
+        await AsyncStorage.setItem("auth", JSON.stringify(res));
+        resolve(true);
+      } catch (e) {
+        reject(e);
+      }
+    })
   }
 
   isAuthenticated() {
